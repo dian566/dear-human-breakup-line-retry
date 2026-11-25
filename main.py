@@ -16,9 +16,20 @@ BREAKUP_LINE = (
 OUTPUT_PATH = "/output/entry.txt"
 
 
+def validate_line(line):
+    """A breakup line must be one line of at most 200 characters."""
+    cleaned = line.strip()
+    if not cleaned:
+        raise ValueError("entry is empty")
+    if "\n" in cleaned:
+        raise ValueError("entry must be a single line")
+    if len(cleaned) > 200:
+        raise ValueError(f"entry too long: {len(cleaned)} chars")
+    return cleaned
+
+
 def main():
-    line = BREAKUP_LINE.strip()
-    assert len(line) <= 200, f"entry too long: {len(line)} chars"
+    line = validate_line(BREAKUP_LINE)
     os.makedirs(os.path.dirname(OUTPUT_PATH), exist_ok=True)
     with open(OUTPUT_PATH, "w", encoding="utf-8") as handle:
         handle.write(line + "\n")
